@@ -22,7 +22,9 @@ Le schéma ci-dessous montre l’enchaînement des traitements que nous devons s
 
 ### nomFunc
 
-`int nomFunc(int para)`
+```c
+int nomFunc(int para)
+```
 
 Explication de ce que fait la fonction
 
@@ -38,7 +40,9 @@ Explication de ce que fait la fonction
 
 ### nomFunc2
 
-`void nomFunc2(int para, float para2)`
+```c
+void nomFunc2(int para, float para2)
+```
 
 Explication de ce que fait la fonction
 
