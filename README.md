@@ -13,3 +13,38 @@ Le schéma ci-dessous montre l’enchaînement des traitements que nous devons s
 
 ## Documentation :
 **(A VENIR)**
+
+| Sommaire des fonctions |
+| ------ |
+| [nomFunc](#nomfunc) - courte description de nomFunc |
+| [nomFunc2](#nomfunc2) - courte description de nomFunc2 | 
+
+
+### nomFunc
+
+`int nomFunc(int para)`
+
+Explication de ce que fait la fonction
+
+> Parameters :
+> * `para`- explications du para
+>
+> Throws :
+> * `typeException`- explication de l'exception
+> 
+> Returns :
+> * `int` - explication de ce que retourne nomFunc
+
+
+### nomFunc2
+
+`void nomFunc2(int para, float para2)`
+
+Explication de ce que fait la fonction
+
+> Parameters :
+> * `para`- explications du para
+> * `para2`- explcation du para2
+>
+> Throws :
+> * `typeException`- explication de l'exception
