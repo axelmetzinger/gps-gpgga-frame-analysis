@@ -1,7 +1,7 @@
 # Mini-Projet C
 
 ## Le projet :
-Ce **mini-projet en langage C** a été réalisé par Zhao JIN et Axel METZINGER dans le cadre du module M2101 de notre DUT Informatique.
+Ce **mini-projet en langage C** a été réalisé par Zhao JIN et Axel METZINGER dans le cadre du module M2101 de notre DUT Informatique à l'Université Paul Sabatier.
 Celui-ci porte sur **l'analyse de trames GPS** suivant la norme *NMEA 0183* afin de créer une "application de géolocalisation" en ligne de commande (CLI).
 
 Le schéma ci-dessous montre l’enchaînement des traitements que nous devons suivre et qu'il faut appliquer à une trame GPS pour extraire et afficher les informations qu’elle contient.
@@ -12,43 +12,230 @@ Le schéma ci-dessous montre l’enchaînement des traitements que nous devons s
 *  [http://aprs.gids.nl/nmea/](http://aprs.gids.nl/nmea/)
 
 ## Documentation :
-**(A VENIR)**
-
-| Sommaire des fonctions |
+| [Sommaire des types](#types) |
 | ------ |
-| [nomFunc](#nomfunc) - courte description de nomFunc |
-| [nomFunc2](#nomfunc2) - courte description de nomFunc2 | 
+| [`enum` - Exception](#exception) - énumération contenant les exceptions |
+| [`enum` - latOr](#lator) - énumération de l'orientation latitudinale |
+| [`enum` - lonOr](#lonor) - énumération de l'orientation longitudinale |
+| [`struct` - extractedTime](#extractedtime) - structure contenant le temps formaté |
+| [`struct` - extractedPosition](#extractedposition) - structure contenant la position formatée |
+| [`struct` - gps](#gps) - structure contenant les différentes données du GPS |
+
+| [Sommaire des fonctions](#fonctions) |
+| ------ |
+| [`void` - inputGPSFrame](#inputgpsframe) - permet la saisie d'une trame GPS | 
+| [`void` - syntaxeCheck](#syntaxecheck) - vérifie la syntaxe de la trame saisie | 
+| [`void` - extractFields](#extractfields) - extrait les différents champs et les stocks dans une `struct gps` | 
+| [`void` - convertTime](#converttime) - convertit l'heure saisie au format HHhMMmSSs | 
+| [`void` - convertPosition](#convertposition) - convertit la position au format séxagésimal | 
+| [`void` - displayTime](#displaytime) - affiche l'heure | 
+| [`void` - displayPosition](#displayposition) - affiche la position | 
+| [`void` - saveInFile](#saveinfile) - enregistre l'heure et la position dans un fichier texte | 
+| [`int` - checksum](#checksum) - renvoie la somme de parité d'une trame GPS | 
 
 
-### nomFunc
+## Types
+### Exception
 
 ```c
-int nomFunc(int para)
+typedef enum {OK, NOT_GPGGA_FRAME, INCORRECT_CHECKSUM, POS_OUT_OF_BOUNDS} Exception;
 ```
 
-Explication de ce que fait la fonction
+Cette énumération permet de gérer les différentes exceptions relatives aux trames GPS GPGGA :
+* `OK` - aucune erreur détéctée
+* `NOT_GPGGA_FRAME` - la trame saisie n'est pas une trame GPGGA
+* `INCORRECT_CHECKSUM` - le contrôle de parité a échoué
+* `POS_OUT_OF_BOUNDS` - la latitude ou la longitude n'est pas comprise dans les valeurs autorisées, la latitude s'étend de 0 à 90 degrés tandis que la longitude est comprise entre 0 et 180 degrés
 
-> Parameters :
-> * `para`- explications du para
->
-> Throws :
-> * `typeException`- explication de l'exception
-> 
-> Returns :
-> * `int` - explication de ce que retourne nomFunc
-
-
-### nomFunc2
+### latOr
 
 ```c
-void nomFunc2(int para, float para2)
+typedef enum {N='N', S='S'} latOr;
 ```
 
-Explication de ce que fait la fonction
+Cette énumération contient les valeurs autorisées pour l'orientation latitudinale.
+
+### lonOr
+
+```c
+typedef enum {E='E', W='W'} lonOr;
+```
+
+Cette énumération contient les valeurs autorisées pour l'orientation longitudinale.
+
+### extractedTime
+
+```c
+struct extractedTime {
+    int hours;
+    int minutes;
+    double seconds;
+};
+```
+
+Cette structure contient l'heure au format heures, minutes, secondes, tel que :
+* `hours` - hh
+* `minutes` - mm
+* `seconds` - ss.ssss
+
+### extractedPosition
+
+```c
+struct extractedPosition {
+    struct {
+        int degrees;
+        int minutes;
+        double seconds;
+        latOr orientation;  //N ou S
+    } latitude;
+    struct {
+        int degrees;
+        int minutes;
+        double seconds;
+        lonOr orientation;  //E ou W
+    } longitude;
+};
+```
+
+Cette structure contient l'heure au format sexagécimal, aussi appelé DMS, selon la latitude et la longitude.
+
+Format sexagécimal : xx°yy'zz.zz" O
+* `degrees` - xx
+* `minutes` - yy
+* `seconds` - zz.zzzz
+* `orientation` - O = (NS) ou (EW)
+
+### gps
+
+```c
+typedef struct {
+    char * message;
+    char extractedMsg[15][20];
+    double rawLatitude;
+    double rawLongitude;
+    double rawTime;
+
+    struct extractedPosition position;
+    struct extractedTime time;
+} gps;
+```
+
+Cette structure permet de stocker toutes les données relatives au GPS :
+* `message` - chaîne de caractère contenant la trame saisie par l'utilisateur
+* `extractedMsg` - tableau contenant chaque information de la trame séparée
+* `rawLatitude` - latitude sous la forme entrée par l'utilisateur dans la trame (en minutes d'angle) : xxxx.xxxx
+* `rawLongitude` - longitude sous la forme entrée par l'utilisateur dans la trame (en minutes d'angle) : yyyy.yyy
+* `rawTime` - heure sous la forme entrée par l'utilisateur dans la trame : hhmmss.ssss
+* `position` - `struct extractedPosition` contenant la position formatée
+* `time` - `struct extractedTime` contenant l'heure formatée
+
+
+## Fonctions
+### inputGPSFrame
+
+```c
+void inputGPSFrame(gps * data);
+```
+
+Permet à l'utilisateur de saisir une trame GPS
 
 > Parameters :
-> * `para`- explications du para
-> * `para2`- explcation du para2
+> * `data` - `struct gps` permettant de retourner la trame saisie
+
+### syntaxeCheck
+
+```c
+void syntaxCheck(const gps * data, jmp_buf resPt);
+```
+
+Vérifie si la trame saisie suit bien la syntaxe GPGGA
+
+> Parameters :
+> * `data` - `struct gps` permettant la transmission de la trame saisie
+> * `resPt` - point de reprise en cas de levée d'erreur
 >
 > Throws :
-> * `typeException`- explication de l'exception
+> * `NOT_GPGGA_FRAME` - si la trame saisie n'est pas une trame GPS GPGGA
+> * `INCORRECT_CHECKSUM` - si le contrôle de parité est incorrect
+
+### extractFields
+
+```c
+void extractFields(gps * data, jmp_buf resPt); 
+```
+
+Extrait chaque paquet d'information de la trame GPGGA dans la table `extractedMsg` et stocke la position et l'heure dans les variables `rawLatitude`, `rawLongitude` et `rawTime` de la structure
+
+> Parameters :
+> * `data` - `struct gps` permettant le stockage des données extraites
+> * `resPt` - point de reprise en cas de levée d'erreur
+>
+> Throws :
+> * `POS_OUT_OF_BOUNDS` - si la latitude n'est pas comprise entre 0 et 90 ou la longitude entre 0 et 180 degrés
+
+### convertTime
+
+```c
+void convertTime(gps * data);
+```
+
+Convertit l'heure au format heures, minutes, secondes et stocke les valeurs dans la structure `time` de la structure en entrée
+
+> Parameters :
+> * `data` - `struct gps` permettant le stockage des données converties
+
+### convertPosition
+
+```c
+void convertPosition(gps * data);
+```
+
+Convertit la position au format sexagécimal selon la latitude et la longitude et stocke les valeurs dans la structure `position` de la structure en entrée
+
+> Parameters :
+> * `data` - `struct gps` permettant le stockage des données converties
+
+### displayTime
+
+```c
+void displayTime(const gps * data);
+```
+
+Affiche l'heure au format : HHhMMmSSs
+
+> Parameters :
+> * `data` - `struct gps` contenant la définition de l'heure formatée dans `time`
+
+### displayPosition
+
+```c
+void displayPosition(const gps * data);
+```
+
+Affiche la position au format : xx°yy'zz.zz" O ; xx°yy'zz.zz" O ; avec O représentant respectivement l'orientation de la latitude et de la longitude
+
+> Parameters :
+> * `data` - `struct gps` contenant la définition de la position formatée dans `position`
+
+### saveInFile
+
+```c
+void saveInFile(const gps * data, char *fileName);
+```
+
+Exporte l'heure et la position extraits de la trame stockée dans la `struct gps` dans un fichier dont le nom est stocké dans fileName
+
+> Parameters :
+> * `data` - `struct gps` contenant la définition de l'heure et de la position formatée dans `time` et `position`
+> * `fileName` - nom du fichier où le résultat sera exporté
+
+### checksum
+
+```c
+int checksum(const char * s);
+```
+
+Calcule la valeur du contrôle de parité
+
+> Parameters :
+> * `s` - chaîne de caractère de la trame entre les symboles `$` et `*`
