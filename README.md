@@ -142,7 +142,7 @@ Permet au programme de lire une trame GPS depuis un fichier dont le nom est stoc
 
 > Parameters :
 > * `data` - `struct gps` permettant de retourner la trame lue
-> * `fileName` - nom du fichier où le résultat sera exporté
+> * `fileName` - nom du fichier d'où la trame sera importée
 
 ### inputGPSFrame
 
