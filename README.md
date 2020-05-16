@@ -23,7 +23,7 @@ Le schéma ci-dessous montre l’enchaînement des traitements que nous devons s
 
 | [Sommaire des fonctions](#fonctions) |
 | ------ |
-| [`void` - readGPSFrameFromFile](#readframefromfile) - permet la lecture d'une trame GPS depuis un fichier |
+| [`void` - readGPSFrameFromFile](#readgpsframefromfile) - permet la lecture d'une trame GPS depuis un fichier |
 | [`void` - inputGPSFrame](#inputgpsframe) - permet la saisie d'une trame GPS | 
 | [`void` - syntaxeCheck](#syntaxecheck) - vérifie la syntaxe de la trame saisie | 
 | [`void` - extractFields](#extractfields) - extrait les différents champs et les stocks dans une `struct gps` | 
