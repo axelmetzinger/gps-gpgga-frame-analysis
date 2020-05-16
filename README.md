@@ -23,6 +23,7 @@ Le schéma ci-dessous montre l’enchaînement des traitements que nous devons s
 
 | [Sommaire des fonctions](#fonctions) |
 | ------ |
+| [`void` - readGPSFrameFromFile](#readframefromfile) - permet la lecture d'une trame GPS depuis un fichier |
 | [`void` - inputGPSFrame](#inputgpsframe) - permet la saisie d'une trame GPS | 
 | [`void` - syntaxeCheck](#syntaxecheck) - vérifie la syntaxe de la trame saisie | 
 | [`void` - extractFields](#extractfields) - extrait les différents champs et les stocks dans une `struct gps` | 
@@ -131,6 +132,18 @@ Cette structure permet de stocker toutes les données relatives au GPS :
 
 
 ## Fonctions
+### readGPSFrameFromFile
+
+```c
+void readGPSFrameFromFile(gps * data, char *fileName);
+```
+
+Permet au programme de lire une trame GPS depuis un fichier dont le nom est stocké dans fileName
+
+> Parameters :
+> * `data` - `struct gps` permettant de retourner la trame lue
+> * `fileName` - nom du fichier où le résultat sera exporté
+
 ### inputGPSFrame
 
 ```c
