@@ -112,9 +112,6 @@ Format sexagécimal : xx°yy'zz.zz" O
 typedef struct {
     char * message;
     char extractedMsg[15][20];
-    double rawLatitude;
-    double rawLongitude;
-    double rawTime;
 
     struct extractedPosition position;
     struct extractedTime time;
@@ -124,9 +121,6 @@ typedef struct {
 Cette structure permet de stocker toutes les données relatives au GPS :
 * `message` - chaîne de caractère contenant la trame saisie par l'utilisateur
 * `extractedMsg` - tableau contenant chaque information de la trame séparée
-* `rawLatitude` - latitude sous la forme entrée par l'utilisateur dans la trame (en minutes d'angle) : xxxx.xxxx
-* `rawLongitude` - longitude sous la forme entrée par l'utilisateur dans la trame (en minutes d'angle) : yyyy.yyy
-* `rawTime` - heure sous la forme entrée par l'utilisateur dans la trame : hhmmss.ssss
 * `position` - `struct extractedPosition` contenant la position formatée
 * `time` - `struct extractedTime` contenant l'heure formatée
 
