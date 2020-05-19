@@ -47,6 +47,7 @@ Cette énumération permet de gérer les différentes exceptions relatives aux t
 * `NOT_GPGGA_FRAME` - la trame saisie n'est pas une trame GPGGA
 * `INCORRECT_CHECKSUM` - le contrôle de parité a échoué
 * `POS_OUT_OF_BOUNDS` - la latitude ou la longitude n'est pas comprise dans les valeurs autorisées, la latitude s'étend de 0 à 90 degrés tandis que la longitude est comprise entre 0 et 180 degrés
+* `POS_OUT_OF_BOUNDS` - l'heure n'est pas comprise dans les valeurs autorisées, les heures doivent être comprises entre 0 et 24, tandis que les minutes et les secondes doivent être entre 0 et 60
 
 ### latOr
 
@@ -179,12 +180,13 @@ Extrait chaque paquet d'information de la trame GPGGA dans la table `extractedMs
 >
 > Throws :
 > * `POS_OUT_OF_BOUNDS` - si la latitude n'est pas comprise entre 0 et 90 ou la longitude entre 0 et 180 degrés
+> * `TIME_OUT_OF_BOUNDS` -  si les heures ne sont pas comprises entre 0 et 24 ou les minutes ou secondes entre 0 et 60
 
 ### convertTime
 
 ```c
 void convertTime(gps * data);
-```
+``TIMEconvertTime(gp`
 
 Convertit l'heure au format heures, minutes, secondes et stocke les valeurs dans la structure `time` de la structure en entrée
 
