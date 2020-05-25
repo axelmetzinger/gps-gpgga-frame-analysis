@@ -186,7 +186,7 @@ Extrait chaque paquet d'information de la trame GPGGA dans la table `extractedMs
 
 ```c
 void convertTime(gps * data);
-``TIMEconvertTime(gp`
+```
 
 Convertit l'heure au format heures, minutes, secondes et stocke les valeurs dans la structure `time` de la structure en entrée
 
