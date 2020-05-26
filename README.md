@@ -7,9 +7,21 @@ Celui-ci porte sur **l'analyse de trames GPS** suivant la norme *NMEA 0183* afin
 Le schéma ci-dessous montre l’enchaînement des traitements que nous devons suivre et qu'il faut appliquer à une trame GPS pour extraire et afficher les informations qu’elle contient.
 ![Schéma de fonctionnement](schema-fonctionnement.jpg)
 
+
+Un fichier makefile est fourni avec le code, il permet de compiler le programme.
+Ce fichier comporte quatre règles :
+* `%.o` - la compilation des fichiers `.c` en `.o`
+* `main` - l'édition des liens du programme `main`
+* `all` -  permet l'édition des liens et la compilation de chaque fichiers du programme
+* `clean` - permet la suppression des fichier compilés (`.o`) et de l'exécutable `main`
+
+Un fichier de test comportant une trame respectant la norme GPGGA est fournie : `gpgga_frame.txt`.
+
+
 ## Ressources :
 *  [https://en.wikipedia.org/wiki/NMEA_0183](https://en.wikipedia.org/wiki/NMEA_0183)
 *  [http://aprs.gids.nl/nmea/](http://aprs.gids.nl/nmea/)
+
 
 ## Documentation :
 | [Sommaire des types](#types) |
