@@ -32,7 +32,7 @@ void syntaxCheck(const gps * data, jmp_buf resPt) {
     //copie le message
     const char * str_tested = (*data).message;
     //chaine représentant les attentes du message
-    const char * str_req = "^\\$[G-][P-]GGA,[[:digit:]]{6}[\\.]?[[:digit:]]{0,4},[[:digit:]]{1,5}[\\.]?[[:digit:]]*,[NS],[[:digit:]]{1,5}[\\.]?[[:digit:]]*,[EW],[0-8],[[:digit:]]{1,2},[[:digit:]]*[\\.]?[[:digit:]]{0,4},[[:digit:]]*[\\.]?[[:digit:]]{0,4},M?,[-]?[[:digit:]]*[\\.]?[[:digit:]]{0,4},M?,[[:digit:]]?[\\.]?[[:digit:]]*,[[:digit:]]{0,4}\\*?[[:digit:]]{0,2}";
+    const char * str_req = "^\\$[G-][P-]GGA,[[:digit:]]{6}[\\.]?[[:digit:]]{0,4},[[:digit:]]{1,5}[\\.]?[[:digit:]]*,[NS],[[:digit:]]{1,5}[\\.]?[[:digit:]]*,[EW],[0-8],[01][[:digit:]],[[:digit:]]*[\\.]?[[:digit:]]{0,4},[[:digit:]]*[\\.]?[[:digit:]]{0,4},M?,[-]?[[:digit:]]*[\\.]?[[:digit:]]{0,4},M?,[[:digit:]]?[\\.]?[[:digit:]]*,[[:digit:]]{0,4}\\*?[[:digit:]]{0,2}";
     //parametrage de la variable d'expression régulière en fonction de la syntaxe spécifiée (compilation) --> renvoie 0 si pas d'erreur
     error = regcomp (&regex, str_req, REG_NOSUB | REG_EXTENDED);
     
